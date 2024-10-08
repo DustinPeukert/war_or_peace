@@ -22,14 +22,14 @@ describe Player do
         end
 
         it 'has a deck' do
-            expect(@player.deck).to eq([@card1, @card2, @card3])
+            expect(@player.deck).to eq(@deck)
         end
     end
 
     describe '#has_lost?' do
         it 'has lost when it has no cards' do
             expect(@player.has_lost?).to be false
-            
+
             @player.deck.remove_card
             expect(@player.has_lost?).to be false
 
