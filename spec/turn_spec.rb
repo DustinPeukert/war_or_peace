@@ -39,222 +39,144 @@ describe Turn do
         end
     end
 
-    describe '#type' do
-        describe ':basic turn' do
-            it 'returns :basic if both players first cards are different' do
-                card1 = Card.new(:heart, 'Jack', 11)
-                card2 = Card.new(:heart, '10', 10)
-                card3 = Card.new(:heart, '9', 9)
-                card4 = Card.new(:diamond, 'Jack', 11)
-                card5 = Card.new(:heart, '8', 8)
-                card6 = Card.new(:diamond, 'Queen', 12)
-                card7 = Card.new(:heart, '3', 3)
-                card8 = Card.new(:diamond, '2', 2)
+    describe 'Turn when type :basic' do
+        before(:each) do
+            @card1 = Card.new(:heart, 'Jack', 11)
+            @card2 = Card.new(:heart, '10', 10)
+            @card3 = Card.new(:heart, '9', 9)
+            @card4 = Card.new(:diamond, 'Jack', 11)
+            @card5 = Card.new(:heart, '8', 8)
+            @card6 = Card.new(:diamond, 'Queen', 12)
+            @card7 = Card.new(:heart, '3', 3)
+            @card8 = Card.new(:diamond, '2', 2)
 
-                deck1 = Deck.new([card1, card2, card5, card8])
-                deck2 = Deck.new([card3, card4, card6, card7])
+            @deck1 = Deck.new([@card1, @card2, @card5, @card8])
+            @deck2 = Deck.new([@card3, @card4, @card6, @card7])
 
-                player1 = Player.new("Megan", deck1)
-                player2 = Player.new("Aurora", deck2)
+            @player1 = Player.new("Megan", @deck1)
+            @player2 = Player.new("Aurora", @deck2)
 
-                turn = Turn.new(player1, player2)
+            @turn = Turn.new(@player1, @player2)
+        end
 
-                expect(turn.type).to eq(:basic)
+        describe '#type' do
+            it 'returns :basic if both players first cards are different ranks' do
+                expect(@card1.rank > @card3.rank).to be true
+                expect(@turn.type).to eq(:basic) 
             end
         end
 
-        describe ':war turn' do
-            it 'returns :war if both players first cards are equal' do
-                card1 = Card.new(:heart, 'Jack', 11)
-                card2 = Card.new(:heart, '10', 10)
-                card3 = Card.new(:heart, '9', 9)
-                card4 = Card.new(:diamond, 'Jack', 11)
-                card5 = Card.new(:heart, '8', 8)
-                card6 = Card.new(:diamond, 'Queen', 12)
-                card7 = Card.new(:heart, '3', 3)
-                card8 = Card.new(:diamond, '2', 2)
+        describe '#winner' do
+            it 'returns player with highest first card when turn type :basic' do
+                winner = turn.winner
 
-                deck1 = Deck.new([card1, card2, card5, card8])
-                deck2 = Deck.new([card4, card3, card6, card7])
-
-                player1 = Player.new("Megan", deck1)
-                player2 = Player.new("Aurora", deck2)
-
-                turn = Turn.new(player1, player2)
-
-                expect(turn.type).to eq(:war)
+                expect(@card1.rank > @card3.rank).to be true
+                expect(winner).to eq(@player1)
             end
         end
 
-        describe ':mutually_assured_destruction turn' do
-            it 'returns :mutually_assured_destruction if both players 1st and 3rd cards match' do
-                card1 = Card.new(:heart, 'Jack', 11)
-                card2 = Card.new(:heart, '10', 10)
-                card3 = Card.new(:heart, '9', 9)
-                card4 = Card.new(:diamond, 'Jack', 11)
-                card5 = Card.new(:heart, '8', 8)
-                card6 = Card.new(:diamond, '8', 8)
-                card7 = Card.new(:heart, '3', 3)
-                card8 = Card.new(:diamond, '2', 2)
+        describe '#pile_cards' do
+            it 'sends both players top cards to the spoils pile if turn type = :basic' do
+                turn.pile_cards
 
-                deck1 = Deck.new([card1, card2, card5, card8])
-                deck2 = Deck.new([card4, card3, card6, card7])
-                
-                player1 = Player.new("Megan", deck1)
-                player2 = Player.new("Aurora", deck2)
-
-                turn = Turn.new(player1, player2)
-
-                expect(turn.type).to eq(:mutually_assured_destruction)
+                expect(turn.spoils_of_war).to eq([card1, card3])
+                expect(player1.deck.cards).to eq([card2, card5, card8])
+                expect(player2.deck.cards).to eq([card4, card6, card7])
             end
         end
     end
 
-    describe '#winner' do
-        it 'returns player with highest first card if turn type is :basic' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, 'Queen', 12)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
+    describe 'Turn when type :war' do
+        before(:each) do
+            @card1 = Card.new(:heart, 'Jack', 11)
+            @card2 = Card.new(:heart, '10', 10)
+            @card3 = Card.new(:heart, '9', 9)
+            @card4 = Card.new(:diamond, 'Jack', 11)
+            @card5 = Card.new(:heart, '8', 8)
+            @card6 = Card.new(:diamond, 'Queen', 12)
+            @card7 = Card.new(:heart, '3', 3)
+            @card8 = Card.new(:diamond, '2', 2)
 
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card3, card4, card6, card7])
+            @deck1 = Deck.new([@card1, @card2, @card5, @card8])
+            @deck2 = Deck.new([@card4, @card3, @card6, @card7])
 
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
+            @player1 = Player.new("Megan", @deck1)
+            @player2 = Player.new("Aurora", @deck2)
 
-            turn = Turn.new(player1, player2)
-
-            winner = turn.winner
-
-            expect(winner).to eq(player1)
+            @turn = Turn.new(@player1, @player2)
         end
 
-        it 'returns player with highest 3rd card if turn type is :war' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, 'Queen', 12)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
-
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card4, card3, card6, card7])
-
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
-
-            turn = Turn.new(player1, player2)
-
-            winner = turn.winner
-
-            expect(winner).to eq(player2)
+        describe '#type' do
+            it 'returns :war if both players first cards are equal rank' do
+                expect(@card1 == @card4).to be true
+                expect(@turn.type).to eq(:war) 
+            end
         end
 
-        it 'returns none if both players 1st and 3rd cards are equal' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, '8', 8)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
+        describe '#winner' do
+            it 'returns player with highest 3rd card if turn type is :war' do
+                winner = turn.winner
 
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card4, card3, card6, card7])
-                
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
+                expect(@card1 == @card4).to be true
+                expect(winner).to eq(player2)
+            end
+        end
 
-            turn = Turn.new(player1, player2)
+        describe '#pile_cards' do
+            it 'sends both players top 3 cards to the spoils pile if turn type = :war' do
+                turn.pile_cards
 
-            winner = turn.winner
-
-            expect(winner).to eq("No Winner")
+                expect(turn.spoils_of_war).to eq([card1, card2, card5, card4, card3, card6])
+                expect(player1.deck.cards).to eq([card8])
+                expect(player2.deck.cards).to eq([card7])
+            end
         end
     end
 
-    describe '#pile_cards' do
-        it 'sends both players top cards to the spoils pile if turn type = :basic' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, 'Queen', 12)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
+    describe 'Turn when type :mutually_assured_destruction' do
+        before(:each) do
+            @card1 = Card.new(:heart, 'Jack', 11)
+            @card2 = Card.new(:heart, '10', 10)
+            @card3 = Card.new(:heart, '9', 9)
+            @card4 = Card.new(:diamond, 'Jack', 11)
+            @card5 = Card.new(:heart, '8', 8)
+            @card6 = Card.new(:diamond, '8', 8)
+            @card7 = Card.new(:heart, '3', 3)
+            @card8 = Card.new(:diamond, '2', 2)
 
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card3, card4, card6, card7])
+            @deck1 = Deck.new([@card1, @card2, @card5, @card8])
+            @deck2 = Deck.new([@card4, @card3, @card6, @card7])
+            
+            @player1 = Player.new("Megan", @deck1)
+            @player2 = Player.new("Aurora", @deck2)
 
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
-
-            turn = Turn.new(player1, player2)
-
-            turn.pile_cards
-
-            expect(turn.spoils_of_war).to eq([card1, card3])
-            expect(player1.deck.cards).to eq([card2, card5, card8])
-            expect(player2.deck.cards).to eq([card4, card6, card7])
+            @turn = Turn.new(@player1, @player2)
         end
 
-        it 'sends both players top 3 cards to the spoils pile if turn type = :war' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, 'Queen', 12)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
-
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card4, card3, card6, card7])
-
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
-
-            turn = Turn.new(player1, player2)
-
-            turn.pile_cards
-
-            expect(turn.spoils_of_war).to eq([card1, card2, card5, card4, card3, card6])
-            expect(player1.deck.cards).to eq([card8])
-            expect(player2.deck.cards).to eq([card7])
+        describe '#type' do
+            it 'returns :mutually_assured_destruction if both players 1st and 3rd cards are equal rank' do
+                expect(@card1 == @card4 && @card5 == @card6)
+                expect(@turn.type).to eq(:mutually_assured_destruction)
+            end
         end
 
-        it 'removes both players top 3 cards from game if turn type = :mutually_assured_destruction' do
-            card1 = Card.new(:heart, 'Jack', 11)
-            card2 = Card.new(:heart, '10', 10)
-            card3 = Card.new(:heart, '9', 9)
-            card4 = Card.new(:diamond, 'Jack', 11)
-            card5 = Card.new(:heart, '8', 8)
-            card6 = Card.new(:diamond, '8', 8)
-            card7 = Card.new(:heart, '3', 3)
-            card8 = Card.new(:diamond, '2', 2)
+        describe '#winner' do
+            it 'returns none when turn type :mutually_assured_destruction' do
+                winner = turn.winner
 
-            deck1 = Deck.new([card1, card2, card5, card8])
-            deck2 = Deck.new([card4, card3, card6, card7])
-                
-            player1 = Player.new("Megan", deck1)
-            player2 = Player.new("Aurora", deck2)
+                expect(@card1 == @card4 && @card5 == @card6)
+                expect(winner).to eq("No Winner")
+            end
+        end
 
-            turn = Turn.new(player1, player2)
+        describe '#pile_cards' do
+            it 'removes both players top 3 cards from game if turn type = :mutually_assured_destruction' do
+                turn.pile_cards
 
-            turn.pile_cards
-
-            expect(turn.spoils_of_war).to eq([])
-            expect(player1.deck.cards).to eq([card8])
-            expect(player2.deck.cards).to eq([card7])
+                expect(turn.spoils_of_war).to eq([])
+                expect(player1.deck.cards).to eq([card8])
+                expect(player2.deck.cards).to eq([card7])
+            end
         end
     end
 end
