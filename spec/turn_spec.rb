@@ -61,14 +61,14 @@ describe Turn do
 
         describe '#type' do
             it 'returns :basic if both players first cards are different ranks' do
-                expect(@card1.rank > @card3.rank).to be true
+                expect(@card1.rank != @card3.rank).to be true
                 expect(@turn.type).to eq(:basic) 
             end
         end
 
         describe '#winner' do
             it 'returns player with highest first card when turn type :basic' do
-                winner = turn.winner
+                winner = @turn.winner
 
                 expect(@card1.rank > @card3.rank).to be true
                 expect(winner).to eq(@player1)
@@ -77,11 +77,11 @@ describe Turn do
 
         describe '#pile_cards' do
             it 'sends both players top cards to the spoils pile if turn type = :basic' do
-                turn.pile_cards
+                @turn.pile_cards
 
-                expect(turn.spoils_of_war).to eq([card1, card3])
-                expect(player1.deck.cards).to eq([card2, card5, card8])
-                expect(player2.deck.cards).to eq([card4, card6, card7])
+                expect(@turn.spoils_of_war).to eq([@card1, @card3])
+                expect(@player1.deck.cards).to eq([@card2, @card5, @card8])
+                expect(@player2.deck.cards).to eq([@card4, @card6, @card7])
             end
         end
     end
@@ -108,27 +108,27 @@ describe Turn do
 
         describe '#type' do
             it 'returns :war if both players first cards are equal rank' do
-                expect(@card1 == @card4).to be true
+                expect(@card1.rank == @card4.rank).to be true
                 expect(@turn.type).to eq(:war) 
             end
         end
 
         describe '#winner' do
             it 'returns player with highest 3rd card if turn type is :war' do
-                winner = turn.winner
+                winner = @turn.winner
 
-                expect(@card1 == @card4).to be true
-                expect(winner).to eq(player2)
+                expect(@card1.rank == @card4.rank).to be true
+                expect(winner).to eq(@player2)
             end
         end
 
         describe '#pile_cards' do
             it 'sends both players top 3 cards to the spoils pile if turn type = :war' do
-                turn.pile_cards
+                @turn.pile_cards
 
-                expect(turn.spoils_of_war).to eq([card1, card2, card5, card4, card3, card6])
-                expect(player1.deck.cards).to eq([card8])
-                expect(player2.deck.cards).to eq([card7])
+                expect(@turn.spoils_of_war).to eq([@card1, @card2, @card5, @card4, @card3, @card6])
+                expect(@player1.deck.cards).to eq([@card8])
+                expect(@player2.deck.cards).to eq([@card7])
             end
         end
     end
@@ -155,27 +155,27 @@ describe Turn do
 
         describe '#type' do
             it 'returns :mutually_assured_destruction if both players 1st and 3rd cards are equal rank' do
-                expect(@card1 == @card4 && @card5 == @card6)
+                expect(@card1.rank == @card4.rank && @card5.rank == @card6.rank).to be true
                 expect(@turn.type).to eq(:mutually_assured_destruction)
             end
         end
 
         describe '#winner' do
             it 'returns none when turn type :mutually_assured_destruction' do
-                winner = turn.winner
+                winner = @turn.winner
 
-                expect(@card1 == @card4 && @card5 == @card6)
+                expect(@card1.rank == @card4.rank && @card5.rank == @card6.rank).to be true
                 expect(winner).to eq("No Winner")
             end
         end
 
         describe '#pile_cards' do
             it 'removes both players top 3 cards from game if turn type = :mutually_assured_destruction' do
-                turn.pile_cards
+                @turn.pile_cards
 
-                expect(turn.spoils_of_war).to eq([])
-                expect(player1.deck.cards).to eq([card8])
-                expect(player2.deck.cards).to eq([card7])
+                expect(@turn.spoils_of_war).to eq([])
+                expect(@player1.deck.cards).to eq([@card8])
+                expect(@player2.deck.cards).to eq([@card7])
             end
         end
     end
