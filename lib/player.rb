@@ -11,4 +11,8 @@ class Player
         return true if @deck.cards.length == 0
         false
     end
+
+    def cards_amount
+        @deck.cards.length
+    end
 end
