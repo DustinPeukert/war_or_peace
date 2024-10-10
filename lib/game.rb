@@ -22,8 +22,8 @@ class Game
 
     full_deck = full_deck.shuffle # .shuffle randomly rearranges elements of an array
 
-    deck1 = Deck.new(full_deck[0..26])
-    deck2 = Deck.new(full_deck[26..51])
+    deck1 = Deck.new(full_deck[0...26]) # Puts first 26 cards into deck1
+    deck2 = Deck.new(full_deck[26..51]) # Puts last 26 cards into deck2
     
     @player1 = Player.new('Megan', deck1)
     @player2 = Player.new('Aurora', deck2)
