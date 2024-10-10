@@ -49,4 +49,9 @@ class Turn
       @player2.deck.cards.shift(3)
     end
   end
+
+  def award_spoils(winner)
+    winner.deck.cards.concat(@spoils_of_war)
+    @spoils_of_war.clear
+  end
 end
