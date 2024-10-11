@@ -94,7 +94,7 @@ player2 = Player.new('Aurora', deck2) # creates player 2
   end
 
   if turn_winner != "No Winner"
-    turn.award_spoils(turn_winner) # issure might be here
+    turn.award_spoils(turn_winner)
   end
 
   if turn_type == :mutually_assured_destruction
