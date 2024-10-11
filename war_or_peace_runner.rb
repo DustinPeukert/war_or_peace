@@ -56,8 +56,9 @@ player2 = Player.new('Aurora', deck2) # creates player 2
 @player2_wins = 0
 @no_winners = 0
 @mad_count = 0
+@war_count = 0
 
-10000000.times do |number| # makes sure the turn amount only goes to 1000000
+1000000.times do |number| # makes sure the turn amount only goes to 1000000
   @turn_number = number + 1
 
   if player1.has_lost? || player2.has_lost? # Will break the loop if a player.has_lost? returns true
@@ -98,6 +99,8 @@ player2 = Player.new('Aurora', deck2) # creates player 2
 
   if turn_type == :mutually_assured_destruction
     @mad_count += 1
+  elsif turn_type == :war
+    @war_count += 1
   end
 
   if turn_winner == player1
@@ -116,5 +119,11 @@ elsif player1.has_lost?
 elsif player2.has_lost?
   puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
 end
+
+puts @player1_wins
+puts @player2_wins
+puts @no_winners
+puts @mad_count
+puts @war_count
 
 # ctrl + c to exit endless loops
