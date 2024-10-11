@@ -10,7 +10,7 @@ class Turn
   end
 
   def type
-    if @player1.deck.cards[0].rank != @player2.deck.cards[0].rank
+    if @player1.deck.cards[0].rank != @player2.deck.cards[0].rank # .sample
       return :basic
     elsif @player1.deck.cards[0].rank == @player2.deck.cards[0].rank &&
           @player1.deck.cards[2].rank == @player2.deck.cards[2].rank
@@ -51,6 +51,7 @@ class Turn
   end
 
   def award_spoils(winner)
+    @spoils_of_war.shuffle!
     winner.deck.cards.concat(@spoils_of_war)
     @spoils_of_war.clear
   end
