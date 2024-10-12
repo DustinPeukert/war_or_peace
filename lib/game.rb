@@ -53,8 +53,8 @@ class Game
       # Instead of playing through a whole turn we will end the turn by giving the rest of
       # the cards from the player that doesnt have enough, to the other player
 
-      if (@player1.cards_amount < 3 || @player2.cards_amount < 3) && 
-        (@player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0))
+      if (@player1.cards_amount < 3 || @player2.cards_amount < 3) &&
+         (@player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0))
         if @player2.cards_amount < 3
           @player1.deck.cards.concat(@player2.deck.cards)
           @player2.deck.cards.clear 
