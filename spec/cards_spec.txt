@@ -1,0 +1,4 @@
+2, Heart, 2
+Jack, Spade, 11
+King, Diamond, 13
+Ace, Club, 14
