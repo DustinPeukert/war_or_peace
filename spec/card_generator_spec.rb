@@ -28,7 +28,7 @@ describe CardGenerator do
       
       expect(card_generator.deck.cards).to eq([])
 
-      card_generator.create_cards
+      card_generator.create_cards('./spec/cards_spec.txt')
 
       expect(card_generator.deck.cards.count).to eq(4) # we have 4 cards listed in our testing txt file
     end
