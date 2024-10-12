@@ -13,6 +13,6 @@ class Player
     end
 
     def cards_amount
-        @deck.cards.length
+        @deck.cards.length # this is a violation of the demeter law, refactor this later after reading more
     end
 end
