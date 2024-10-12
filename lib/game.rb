@@ -13,7 +13,7 @@ class Game
               :player1,
               :player2
 
-  def initialize
+  def initialize # this information should be refactored into multiple methods
     @player1_wins = 0 #testing variables
     @player2_wins = 0
     @no_winners = 0
