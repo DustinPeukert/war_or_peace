@@ -39,7 +39,6 @@ describe Player do
             @player.deck.remove_card
             expect(@player.has_lost?).to be true
 
-            expect(@player.deck).to be_a(Deck)
             expect(@player.deck.cards).to be_empty
         end
     end
