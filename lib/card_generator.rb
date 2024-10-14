@@ -1,8 +1,8 @@
 class CardGenerator
   attr_reader :deck
 
-  def initialize(deck)
-    @deck = deck
+  def initialize
+    @deck = []
   end
 
   def create_cards(file_path)
@@ -23,7 +23,7 @@ class CardGenerator
     
       rank = card_data[2].to_i
     
-      @deck.cards << Card.new(value, suit, rank)
+      @deck << Card.new(value, suit, rank)
     end
   end
 end
