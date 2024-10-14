@@ -43,6 +43,8 @@ class Turn
     elsif type == :war
       3.times do
         @spoils_of_war << @player1.remove_card
+      end
+      3.times do
         @spoils_of_war << @player2.remove_card
       end
     elsif type == :mutually_assured_destruction
