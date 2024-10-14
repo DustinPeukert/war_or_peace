@@ -18,7 +18,7 @@ class Player
 
     def rank_of_card_at(index) # this method allows us to access the rank using just the player class, rather than chaining methods
         @deck.rank_of_card_at(index) # avoids a violation of the law of Demeter
-    end
+    end # this is called a wrapper method
 
     def remove_card
         @deck.remove_card
