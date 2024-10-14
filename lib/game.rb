@@ -135,7 +135,7 @@ class Game
       # the cards from the player that doesnt have enough, to the other player
 
       if (@turn.player1.cards_amount < 3 || @turn.player2.cards_amount < 3) &&
-        (@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0))
+         (@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0))
         if @turn.player2.cards_amount < 3
           @turn.player1.cards.concat(@turn.player2.cards)
           @turn.player2.cards.clear 
