@@ -59,6 +59,21 @@ class Game
     end
   end
 
+  def print_turn_info
+    @turn_winner = @turn.winner # we need to store the winner and turn type attributes before we pile the cards
+    @turn_type = @turn.type     # since these will change after we move cards
+    @turn.pile_cards
+    cards_won = @turn.spoils_of_war.count #determines how many cards are won based on the amount of cards in spoils of war
+
+    if @turn_type == :basic # determines correct terminal output based on turn type
+      puts "Turn #{@turn_number}: #{@turn_winner.name} won #{cards_won} cards"
+    elsif @turn_type == :war
+      puts "Turn #{@turn_number}: WAR - #{@turn_winner.name} won 6 cards"
+    elsif @turn_type == :mutually_assured_destruction
+      puts "Turn #{@turn_number}: *mutually assured destruction* 6 cards removed from play"
+    end
+  end
+
   def determine_winner
     if @turn_number == 1000000 && (@player1.has_lost? == @player2.has_lost?)
       puts "---- DRAW ----"
@@ -66,6 +81,24 @@ class Game
       puts "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
     elsif @player2.has_lost?
       puts "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
+    end
+  end
+
+  def determine_statistics
+    # keeps track of how many times "special" turn types happen
+    if @turn_type == :mutually_assured_destruction 
+      @mad_count += 1
+    elsif @turn_type == :war
+      @war_count += 1
+    end
+
+    # keeps track of how many times each player wins a turn throughout the game as well as how many times there was no turn winner
+    if @turn_winner == @player1
+      @player1_wins += 1
+    elsif @turn_winner == @player2
+      @player2_wins += 1
+    elsif @turn_winner == "No Winner"
+      @no_winners += 1
     end
   end
 
@@ -94,59 +127,31 @@ class Game
 
     while !@player1.has_lost? && !@player2.has_lost? && @turn_number != 1000000 do
       @turn_number += 1
+      @turn = Turn.new(@player1, @player2)
 
       # We want to add a contingency in case a player doesn't have enough cards to play for
       # a :war or :mutually_assured_destruction turn type
       # Instead of playing through a whole turn we will end the turn by giving the rest of
       # the cards from the player that doesnt have enough, to the other player
 
-      if (@player1.cards_amount < 3 || @player2.cards_amount < 3) &&
-         (@player1.rank_of_card_at(0) == @player2.rank_of_card_at(0))
-        if @player2.cards_amount < 3
-          @player1.cards.concat(@player2.cards)
-          @player2.cards.clear 
+      if (@turn.player1.cards_amount < 3 || @turn.player2.cards_amount < 3) &&
+        (@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0))
+        if @turn.player2.cards_amount < 3
+          @turn.player1.cards.concat(@turn.player2.cards)
+          @turn.player2.cards.clear 
           break
-        elsif @player1.cards_amount < 3
-          @player2.cards.concat(@player1.cards)
-          @player1.cards.clear
+        elsif @turn.player1.cards_amount < 3
+          @turn.player2.cards.concat(@turn.player1.cards)
+          @turn.player1.cards.clear
           break
         end
       end
 
-      turn = Turn.new(@player1, @player2)
+      print_turn_info
 
-      turn_winner = turn.winner # we need to store the winner and turn type attributes before we pile the cards
-      turn_type = turn.type     # since these will change after we move cards
-      turn.pile_cards
-      cards_won = turn.spoils_of_war.count #determines how many cards are won based on the amount of cards in spoils of war
+      @turn.award_spoils(@turn_winner)
 
-      if turn_type == :basic # determines correct terminal output based on turn type
-        print "Turn #{@turn_number}: #{turn_winner.name} won #{cards_won} cards\n"
-      elsif turn_type == :war
-        print "Turn #{@turn_number}: WAR - #{turn_winner.name} won #{cards_won} cards\n"
-      elsif turn_type == :mutually_assured_destruction
-        puts "Turn #{@turn_number}: *mutually assured destruction* 6 cards removed from play"
-      end
-
-      if turn_winner != "No Winner" # contingency in the case that mutually assured destruction happens
-        turn.award_spoils(turn_winner)
-      end
-
-      # keeps track of how many times "special" turn types happen
-      if turn_type == :mutually_assured_destruction 
-        @mad_count += 1
-      elsif turn_type == :war
-        @war_count += 1
-      end
-
-      # keeps track of how many times each player wins a turn throughout the game as well as how many times there was no turn winner
-      if turn_winner == @player1
-        @player1_wins += 1
-      elsif turn_winner == @player2
-        @player2_wins += 1
-      elsif turn_winner == "No Winner"
-        @no_winners += 1
-      end
+      determine_statistics
     end
 
     determine_winner
