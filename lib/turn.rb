@@ -56,10 +56,12 @@ class Turn
   end
 
   def award_spoils(winner)
-    @spoils_of_war.shuffle!
-    @spoils_of_war.each do |card|
-      winner.add_card(card)
+    if winner != "No Winner"
+      @spoils_of_war.shuffle!
+      @spoils_of_war.each do |card|
+        winner.add_card(card)
+      end
+      @spoils_of_war.clear
     end
-    @spoils_of_war.clear
   end
 end
