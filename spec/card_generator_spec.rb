@@ -6,31 +6,27 @@ require './lib/card'
 describe CardGenerator do
   describe '#initialize' do
     it 'is a CardGenerator' do
-      empty_deck = Deck.new([])
-      card_generator = CardGenerator.new(empty_deck)
+      card_generator = CardGenerator.new
 
       expect(card_generator).to be_a(CardGenerator)
     end
 
-    it 'can return a deck object as an attribute' do
-      empty_deck = Deck.new([])
-      card_generator = CardGenerator.new(empty_deck)
+    it 'has an empty deck by default' do
+      card_generator = CardGenerator.new
 
-      expect(card_generator.deck).to be_a(Deck)
+      expect(card_generator.deck).to eq([])
     end
   end
   
   describe '#create_cards' do
     it 'creates cards from a prebuilt text file' do
-      empty_deck = Deck.new([])
+      card_generator = CardGenerator.new
       
-      card_generator = CardGenerator.new(empty_deck)
-      
-      expect(card_generator.deck.cards).to eq([])
+      expect(card_generator.deck).to eq([])
 
       card_generator.create_cards('./spec/cards_spec.txt')
 
-      expect(card_generator.deck.cards.count).to eq(4) # we have 4 cards listed in our testing txt file
+      expect(card_generator.deck.count).to eq(4) # we have 4 cards listed in our testing txt file
     end
   end
 end
