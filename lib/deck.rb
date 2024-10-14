@@ -10,7 +10,7 @@ class Deck
     end
 
     def high_ranking_cards # pointless method???
-        high_ranking_cards = @cards.find_all do |card|
+        @cards.find_all do |card|
             card.rank > 10
         end
     end
