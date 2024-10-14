@@ -26,4 +26,8 @@ class Player
     def add_card(card)
         @deck.add_card(card)
     end
+
+    def cards
+        @deck.cards
+    end
 end
