@@ -9,13 +9,13 @@ class Deck
         @cards[index].rank
     end
 
-    def high_ranking_cards
+    def high_ranking_cards # pointless method???
         high_ranking_cards = @cards.find_all do |card|
             card.rank > 10
         end
     end
 
-    def percent_high_ranking
+    def percent_high_ranking # pointless method???
         ((high_ranking_cards.count.to_f / @cards.count.to_f) * 100).round(2)
     end
 
