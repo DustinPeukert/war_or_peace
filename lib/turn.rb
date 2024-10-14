@@ -9,13 +9,16 @@ class Turn
     @spoils_of_war = []
   end
 
+  def cards_equal_at?(index)
+    @player1.rank_of_card_at(index) == @player2.rank_of_card_at(index)
+  end
+
   def type
-    if @player1.rank_of_card_at(0) != @player2.rank_of_card_at(0)
+    if !cards_equal_at?(0)
       :basic
-    elsif @player1.rank_of_card_at(0) == @player2.rank_of_card_at(0) &&
-          @player1.rank_of_card_at(2) == @player2.rank_of_card_at(2)
+    elsif cards_equal_at?(0) && cards_equal_at?(2)
       :mutually_assured_destruction
-    elsif @player1.rank_of_card_at(0) == @player2.rank_of_card_at(0)
+    elsif cards_equal_at?(0)
       :war
     end
   end
@@ -25,7 +28,7 @@ class Turn
       @player1
     elsif @player1.rank_of_card_at(0) < @player2.rank_of_card_at(0)
       @player2
-    elsif @player1.rank_of_card_at(0) == @player2.rank_of_card_at(0)
+    elsif cards_equal_at?(0)
       if @player1.rank_of_card_at(2) > @player2.rank_of_card_at(2)
         @player1
       elsif @player1.rank_of_card_at(2) < @player2.rank_of_card_at(2)
