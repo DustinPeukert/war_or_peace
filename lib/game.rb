@@ -5,15 +5,6 @@ require_relative 'turn'
 require_relative 'card_generator'
 
 class Game
-  attr_reader :player1_wins,
-              :player2_wins,
-              :no_winners,
-              :mad_count,
-              :war_count,
-              :turn_number,
-              :player1,
-              :player2
-
   def initialize
     @player1_wins = 0 # testing variables
     @player2_wins = 0
