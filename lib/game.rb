@@ -20,7 +20,6 @@ class Game
     @no_winners = 0
     @mad_count = 0
     @war_count = 0
-
     @turn_number = 0 # used to track turn number
   end
 
