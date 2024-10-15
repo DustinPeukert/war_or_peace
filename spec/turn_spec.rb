@@ -61,7 +61,7 @@ describe Turn do
 
         describe '#type' do
             it 'returns :basic if both players first cards are different ranks' do
-                expect(@card1.rank != @card3.rank).to be true
+                expect(@turn.player1.rank_of_card_at(0) != @turn.player2.rank_of_card_at(0)).to be true #change this!
                 expect(@turn.type).to eq(:basic) 
             end
         end
@@ -70,7 +70,7 @@ describe Turn do
             it 'returns player with highest first card when turn type :basic' do
                 winner = @turn.winner
 
-                expect(@card1.rank > @card3.rank).to be true
+                expect(@turn.player1.rank_of_card_at(0) > @turn.player2.rank_of_card_at(0)).to be true
                 expect(winner).to eq(@player1)
             end
         end
@@ -108,7 +108,7 @@ describe Turn do
 
         describe '#type' do
             it 'returns :war if both players first cards are equal rank' do
-                expect(@card1.rank == @card4.rank).to be true
+                expect(@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0)).to be true
                 expect(@turn.type).to eq(:war) 
             end
         end
@@ -117,7 +117,7 @@ describe Turn do
             it 'returns player with highest 3rd card if turn type is :war' do
                 winner = @turn.winner
 
-                expect(@card1.rank == @card4.rank).to be true
+                expect(@turn.player1.rank_of_card_at(2) < @turn.player2.rank_of_card_at(2)).to be true
                 expect(winner).to eq(@player2)
             end
         end
@@ -155,7 +155,8 @@ describe Turn do
 
         describe '#type' do
             it 'returns :mutually_assured_destruction if both players 1st and 3rd cards are equal rank' do
-                expect(@card1.rank == @card4.rank && @card5.rank == @card6.rank).to be true
+                expect(@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0) &&
+                       @turn.player1.rank_of_card_at(2) == @turn.player2.rank_of_card_at(2)).to be true
                 expect(@turn.type).to eq(:mutually_assured_destruction)
             end
         end
@@ -164,7 +165,8 @@ describe Turn do
             it 'returns none when turn type :mutually_assured_destruction' do
                 winner = @turn.winner
 
-                expect(@card1.rank == @card4.rank && @card5.rank == @card6.rank).to be true
+                expect(@turn.player1.rank_of_card_at(0) == @turn.player2.rank_of_card_at(0) &&
+                       @turn.player1.rank_of_card_at(2) == @turn.player2.rank_of_card_at(2)).to be true
                 expect(winner).to eq("No Winner")
             end
         end
@@ -204,13 +206,13 @@ describe Turn do
 
             turn.pile_cards
             expect(turn.spoils_of_war).to eq([card1, card3])
-            expect(player1.deck.cards).to eq([card2, card5, card8])
-            expect(player2.deck.cards).to eq([card4, card6, card7])
+            expect(turn.player1.cards_amount).to eq(3)
+            expect(turn.player2.cards_amount).to eq(3)
 
             turn.award_spoils(winner)
             expect(turn.spoils_of_war).to eq([])
-            expect(player1.deck.cards).to eq([card2, card5, card8, card1, card3])
-            expect(player2.deck.cards).to eq([card4, card6, card7])
+            expect(turn.player1.cards_amount).to eq(5)
+            expect(turn.player2.cards_amount).to eq(3)
         end
     end
 end

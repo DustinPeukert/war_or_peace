@@ -9,50 +9,62 @@ class Turn
     @spoils_of_war = []
   end
 
+  def cards_equal_at?(index)
+    @player1.rank_of_card_at(index) == @player2.rank_of_card_at(index)
+  end
+
   def type
-    if @player1.deck.cards[0].rank != @player2.deck.cards[0].rank # .sample
-      return :basic
-    elsif @player1.deck.cards[0].rank == @player2.deck.cards[0].rank &&
-          @player1.deck.cards[2].rank == @player2.deck.cards[2].rank
-      return :mutually_assured_destruction
-    elsif @player1.deck.cards[0].rank == @player2.deck.cards[0].rank
-      return :war
+    if !cards_equal_at?(0)
+      :basic
+    elsif cards_equal_at?(0) && cards_equal_at?(2)
+      :mutually_assured_destruction
+    elsif cards_equal_at?(0)
+      :war
     end
   end
 
   def winner
-    if @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
-      return @player1
-    elsif @player1.deck.rank_of_card_at(0) < @player2.deck.rank_of_card_at(0)
-      return @player2
-    elsif @player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0)
-      if @player1.deck.rank_of_card_at(2) > @player2.deck.rank_of_card_at(2)
-        return @player1
-      elsif @player1.deck.rank_of_card_at(2) < @player2.deck.rank_of_card_at(2)
-        return @player2 
+    if @player1.rank_of_card_at(0) > @player2.rank_of_card_at(0)
+      @player1
+    elsif @player1.rank_of_card_at(0) < @player2.rank_of_card_at(0)
+      @player2
+    elsif cards_equal_at?(0)
+      if @player1.rank_of_card_at(2) > @player2.rank_of_card_at(2)
+        @player1
+      elsif @player1.rank_of_card_at(2) < @player2.rank_of_card_at(2)
+        @player2 
       else
-        return "No Winner"
+        "No Winner"
       end
     end
   end
 
   def pile_cards
     if type == :basic
-      @spoils_of_war << @player1.deck.cards.shift
-      @spoils_of_war << @player2.deck.cards.shift
+      @spoils_of_war << @player1.remove_card
+      @spoils_of_war << @player2.remove_card
     elsif type == :war
-      @spoils_of_war << @player1.deck.cards.shift(3)
-      @spoils_of_war << @player2.deck.cards.shift(3)
-      @spoils_of_war.flatten! # ! changes initial array rather than returning a new one
+      3.times do
+        @spoils_of_war << @player1.remove_card
+      end
+      3.times do
+        @spoils_of_war << @player2.remove_card
+      end
     elsif type == :mutually_assured_destruction
-      @player1.deck.cards.shift(3)
-      @player2.deck.cards.shift(3)
+      3.times do
+        @player1.remove_card
+        @player2.remove_card
+      end
     end
   end
 
   def award_spoils(winner)
-    @spoils_of_war.shuffle!
-    winner.deck.cards.concat(@spoils_of_war)
-    @spoils_of_war.clear
+    if winner != "No Winner"
+      @spoils_of_war.shuffle!
+      @spoils_of_war.each do |card|
+        winner.add_card(card)
+      end
+      @spoils_of_war.clear
+    end
   end
 end
