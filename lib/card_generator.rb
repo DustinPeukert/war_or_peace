@@ -15,15 +15,15 @@ class CardGenerator
         suit = :heart
       elsif card_data[1].strip == 'Diamond'
         suit = :diamond
-      elsif card_data[1].strip == 'Ace'
-        suit = :ace
+      elsif card_data[1].strip == 'Club'
+        suit = :club
       elsif card_data[1].strip == 'Spade'
         suit = :spade
       end
     
       rank = card_data[2].to_i
     
-      @deck << Card.new(value, suit, rank)
+      @deck << Card.new(suit, value, rank)
     end
   end
 end
